@@ -37,6 +37,9 @@ public class ServicioOpenWeather {
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response.getBody());
+        if (!response.getStatusCode().is2xxSuccessful()){
+            throw new RuntimeException(root.asText());
+        }
         JsonNode main = root.path("main");
         JsonNode tempOpen = main.path("temp");
         double temp = tempOpen.asDouble()-273.15;
